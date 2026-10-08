@@ -89,6 +89,7 @@ h1{font-size:26px;line-height:1.15;font-weight:600;letter-spacing:-.015em;margin
 .btn.primary:hover:not(:disabled){background:var(--accent);filter:brightness(1.08)}
 .btn.danger{color:var(--danger)}
 .btn.danger-solid{background:var(--danger);border-color:var(--danger);color:#fff}
+.btn.danger-solid:hover:not(:disabled){background:var(--danger);filter:brightness(1.08)}
 .btn.ghost{border-color:transparent;background:transparent}
 .btn.ghost:hover:not(:disabled){background:var(--surface)}
 .btn.sm{height:32px;padding:0 10px;font-size:13.5px;border-radius:8px}
@@ -174,6 +175,8 @@ h1{font-size:26px;line-height:1.15;font-weight:600;letter-spacing:-.015em;margin
 .pv-head .close{margin-left:auto;display:none}
 .pv-body{flex:1;overflow:auto;background:var(--surface);display:flex;padding:16px;position:relative}
 .pv-body canvas{margin:auto;background:var(--paper);box-shadow:var(--sheet-shadow);display:block}
+.pv-page{position:relative;margin:auto;flex:none;background:var(--paper);box-shadow:var(--sheet-shadow);overflow:hidden}
+.pv-inner{position:absolute;left:50%;top:50%;background:#fff}
 .pv-empty{margin:auto;color:var(--muted);font-size:14px;text-align:center}
 .pv-foot{display:flex;align-items:center;gap:6px;padding:10px 12px;border-top:1px solid var(--line)}
 .pv-foot .zoom{min-width:56px;text-align:center;font-size:13.5px;font-variant-numeric:tabular-nums;color:var(--muted)}
@@ -200,6 +203,7 @@ dialog.narrow{width:min(480px,calc(100% - 24px))}
 .field label,.flabel{font-weight:500;font-size:14px}
 select.in,input.in{height:38px;border:1px solid var(--line);border-radius:9px;background:var(--card);padding:0 10px;min-width:0}
 input.in[type=number]{width:84px;font-variant-numeric:tabular-nums}
+input.in.bad{border-color:var(--danger)}
 .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:2px 0 14px}
 .tab{display:flex;align-items:center;justify-content:center;gap:9px;height:50px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-weight:500;cursor:pointer;font-size:14.5px}
 .tab:hover{border-color:var(--line-strong)}
@@ -218,6 +222,8 @@ input.in[type=number]{width:84px;font-variant-numeric:tabular-nums}
 .opts{display:flex;gap:12px 22px;flex-wrap:wrap;align-items:center;background:var(--surface);border-radius:12px;padding:12px 14px;margin-top:14px}
 .opts .field{margin:0}
 .note{font-size:13px;color:var(--muted);margin:10px 0 0}
+.note.err{color:var(--danger)}
+.note.warn{color:var(--danger);font-weight:500}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--card)}
 .seg button{height:36px;padding:0 12px;border:0;border-left:1px solid var(--line);background:transparent;cursor:pointer;font-size:14px}
 .seg button:first-child{border-left:0}
@@ -236,6 +242,17 @@ input.in[type=number]{width:84px;font-variant-numeric:tabular-nums}
 .list .idx{font-weight:600;width:22px;color:var(--muted);font-variant-numeric:tabular-nums}
 .list .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
 .list .mt{color:var(--muted);font-size:13px;white-space:nowrap}
+.mg-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.mg-row{background:var(--card)}
+.mg-row .grip{color:var(--faint);cursor:grab;display:flex;touch-action:none}
+.mg-row .grip svg.i{fill:currentColor;stroke:none}
+select.in.mg-pos{height:32px;width:58px;padding:0 6px;font-weight:600;font-variant-numeric:tabular-nums}
+.mg-thumb{width:38px;height:50px;flex:none;border-radius:5px;background:var(--surface);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.mg-thumb img{max-width:100%;max-height:100%;background:#fff;box-shadow:var(--sheet-shadow)}
+.mg-thumb img:not([src]){display:none}
+.mg-name{flex:1;min-width:0;display:flex;flex-direction:column}
+.mg-name .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+.mg-empty{background:var(--surface);border-radius:12px}
 .radio{display:flex;align-items:flex-start;gap:10px;padding:10px 0;cursor:pointer}
 .radio input{margin-top:4px;accent-color:var(--accent)}
 .radio span small{display:block;color:var(--muted);font-size:13px}
@@ -243,6 +260,8 @@ input.in[type=number]{width:84px;font-variant-numeric:tabular-nums}
 .opt:first-child{border-top:0;padding-top:4px}
 .opt h4{margin:0;font-size:15px;font-weight:600}
 .opt p{margin:2px 0 0;color:var(--muted);font-size:13.5px}
+.opt .grow{flex:1;min-width:240px}
+.opt .rbtns{display:flex;gap:8px;flex-wrap:wrap}
 .lb{position:absolute;inset:0;z-index:10;background:rgba(16,18,24,.86);display:flex;flex-direction:column;padding:52px 16px 16px;border-radius:18px}
 .lb .cap{position:absolute;top:16px;left:18px;right:60px;color:#fff;font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lb .x{position:absolute;top:10px;right:10px}
@@ -298,6 +317,10 @@ input.in[type=number]{width:84px;font-variant-numeric:tabular-nums}
   .drop{padding:40px 18px}
   .selbar .hint{display:none}
   .df .btn{flex:1}
+  .opt .rbtns{width:100%}
+  .mg-row{flex-wrap:wrap}
+  .mg-name{flex-basis:calc(100% - 160px)}
+  .opt .rbtns .btn{flex:1}
   .tab{flex-direction:column;gap:2px;height:60px;font-size:13px}
   .toasts{top:calc(12px + env(safe-area-inset-top,0px));bottom:auto;right:12px;left:12px;max-width:none}
   .insat{width:100%}
@@ -338,6 +361,7 @@ input.in[type=number]{width:84px;font-variant-numeric:tabular-nums}
     <symbol id="i-down" viewBox="0 0 24 24"><path d="M5 9l7 7 7-7"/></symbol>
     <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.1"/></symbol>
     <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v6M12 16.4v.1"/></symbol>
+    <symbol id="i-grip" viewBox="0 0 24 24"><circle cx="9" cy="6" r="1.3"/><circle cx="15" cy="6" r="1.3"/><circle cx="9" cy="12" r="1.3"/><circle cx="15" cy="12" r="1.3"/><circle cx="9" cy="18" r="1.3"/><circle cx="15" cy="18" r="1.3"/></symbol>
     <symbol id="i-before" viewBox="0 0 24 24"><path d="M12 19V9M8 13l4-4 4 4M6 5h12"/></symbol>
     <symbol id="i-after" viewBox="0 0 24 24"><path d="M12 5v10M8 11l4 4 4-4M6 19h12"/></symbol>
   </defs>
@@ -371,7 +395,7 @@ input.in[type=number]{width:84px;font-variant-numeric:tabular-nums}
     <div class="row">
       <button class="btn primary" id="choose" type="button"><svg class="i"><use href="#i-add"/></svg>Choose PDF</button>
     </div>
-    <p class="fine">Your PDF stays on your device. Files are processed locally in your browser.</p>
+    <p class="fine">Your PDF stays on your device. Large files (up to about 2 GB in total) work best in Chrome or Edge on a computer.</p>
   </section>
 
   <div class="files" id="files" aria-label="Uploaded files"></div>
@@ -430,7 +454,7 @@ input.in[type=number]{width:84px;font-variant-numeric:tabular-nums}
 </div>
 
 <dialog id="dlg"></dialog>
-<div class="prog" id="prog" role="status" aria-live="polite"><div class="box"><p class="lb2" id="progLb">Working…</p><div class="bar"><i id="progBar"></i></div><p class="sm">Processing in your browser. Large files can take a moment.</p></div></div>
+<div class="prog" id="prog" role="status" aria-live="polite"><div class="box"><p class="lb2" id="progLb">Working…</p><div class="bar"><i id="progBar"></i></div><p class="sm">Processing in your browser. Large files can take a few minutes — keep this tab open.</p></div></div>
 <div class="toasts" id="toasts" aria-live="polite"></div>
 <div class="dragcover" id="dragcover">Drop PDFs or images to add them</div>
 
@@ -446,10 +470,47 @@ var esc = function(s){ return String(s).replace(/[&<>"']/g, function(c){ return 
 var icon = function(n){ return '<svg class="i" aria-hidden="true"><use href="#i-' + n + '"/></svg>'; };
 var tick = function(){ return new Promise(function(r){ setTimeout(r, 0); }); };
 var plural = function(n, w){ return n + ' ' + w + (n === 1 ? '' : 's'); };
-function fmtSize(b){ if (b < 1024) return b + ' B'; if (b < 1048576) return (b/1024).toFixed(0) + ' KB'; return (b/1048576).toFixed(b < 10485760 ? 1 : 0) + ' MB'; }
+function fmtSize(b){ if (b < 1024) return b + ' B'; if (b < 1048576) return (b/1024).toFixed(0) + ' KB'; if (b < 1073741824) return (b/1048576).toFixed(b < 10485760 ? 1 : 0) + ' MB'; return (b/1073741824).toFixed(2) + ' GB'; }
 function baseName(n){ return String(n || 'document').replace(/\.pdf$/i, '').replace(/[\\/:*?"<>|]+/g, '_') || 'document'; }
 var A4 = [595.28, 841.89], LETTER = [612, 792];
+var BIG_FILE = 48 * 1048576;          // above this, pdf.js reads the file in pieces instead of all at once
+var BIG_TOTAL = 1.5 * 1073741824;     // warn about memory when an export is this large
 function mm(pt){ return Math.round(pt * 25.4 / 72); }
+// Screen-sharpness helpers: render at the real device pixel ratio (up to 3x) and allow big canvases.
+var MAXPX = 16e6;
+function DPR(){ return Math.min(window.devicePixelRatio || 1, 3); }
+function capScale(W, H, s){ return Math.min(s, Math.sqrt(MAXPX / (W * H))); }
+// High-quality downscale: halve step by step so large photos stay sharp instead of aliased/soft.
+function drawImageHQ(ctx, img, dx, dy, dw, dh){
+  var sw = img.naturalWidth || img.width, sh = img.naturalHeight || img.height, src = img;
+  while (sw / 2 >= dw && sh / 2 >= dh && sw > 2 && sh > 2) {
+    var nw = Math.max(1, Math.round(sw / 2)), nh = Math.max(1, Math.round(sh / 2));
+    var t = document.createElement('canvas'); t.width = nw; t.height = nh;
+    var tc = t.getContext('2d'); tc.imageSmoothingEnabled = true; tc.imageSmoothingQuality = 'high'; tc.drawImage(src, 0, 0, nw, nh);
+    if (src !== img) src.width = src.height = 0;
+    src = t; sw = nw; sh = nh;
+  }
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(src, dx, dy, dw, dh);
+  if (src !== img) src.width = src.height = 0;
+}
+// Image/blank page preview built from the ORIGINAL image file, so it is pixel-exact at any zoom.
+function syntheticDom(p, css){
+  var pw = p.w * css, ph = p.h * css, sw = p.rot % 180 !== 0;
+  var outer = document.createElement('div'); outer.className = 'pv-page';
+  outer.style.width = Math.round(sw ? ph : pw) + 'px'; outer.style.height = Math.round(sw ? pw : ph) + 'px';
+  var inner = document.createElement('div'); inner.className = 'pv-inner';
+  inner.style.width = pw + 'px'; inner.style.height = ph + 'px';
+  inner.style.transform = 'translate(-50%,-50%) rotate(' + p.rot + 'deg)';
+  if (p.kind === 'img') {
+    var im = S.images.get(p.img), b = fitBox(p.w, p.h, im.w, im.h, p.m), el = document.createElement('img');
+    el.src = im.url; el.alt = ''; el.draggable = false;
+    el.style.cssText = 'position:absolute;max-width:none;left:' + (b.x * css) + 'px;top:' + ((p.h - b.y - b.h) * css) + 'px;width:' + (b.w * css) + 'px;height:' + (b.h * css) + 'px';
+    inner.appendChild(el);
+  }
+  outer.appendChild(inner);
+  return outer;
+}
 function orientName(w, h){ return w > h ? 'landscape' : w < h ? 'portrait' : 'square'; }
 
 /* ---------- Libraries ---------- */
@@ -544,7 +605,7 @@ function toast(msg, type, action){
     t.appendChild(b);
   }
   $('#toasts').appendChild(t);
-  setTimeout(function(){ t.remove(); }, type === 'error' ? 8000 : 5000);
+  setTimeout(function(){ t.remove(); }, type === 'error' ? 10000 : 5000);
 }
 var progress = {
   show:function(label, frac){ $('#prog').classList.add('on'); this.set(label, frac || 0); },
@@ -552,19 +613,35 @@ var progress = {
   hide:function(){ $('#prog').classList.remove('on'); }
 };
 
-/* ---------- Loading PDFs ---------- */
+/* ---------- Loading PDFs ----------
+   The file itself is NOT read into memory here. Small files are handed to pdf.js whole;
+   big files are read by pdf.js in pieces (range requests on the File), so a 1–2 GB PDF
+   opens quickly and only the pages you look at are read. The full bytes are read only
+   when you download, one source file at a time. */
 function isPdfFile(f){ return /\.pdf$/i.test(f.name) || f.type === 'application/pdf'; }
 function isImageFile(f){ return (/^image\//.test(f.type) && !/svg/.test(f.type)) || /\.(jpe?g|jfif|png|webp|gif|bmp|avif|heic|heif|tiff?|ico)$/i.test(f.name); }
+async function openWithPdfJs(file, head){
+  var common = { isEvalSupported:false, useSystemFonts:true };
+  if (file.size <= BIG_FILE) {
+    var all = new Uint8Array(await file.arrayBuffer());
+    return pdfjsLib.getDocument(Object.assign({ data:all }, common)).promise;
+  }
+  var tr = new pdfjsLib.PDFDataRangeTransport(file.size, head);
+  tr.requestDataRange = function(begin, end){
+    file.slice(begin, end).arrayBuffer().then(function(buf){ tr.onDataRange(begin, new Uint8Array(buf)); }, function(){});
+  };
+  return pdfjsLib.getDocument(Object.assign({ range:tr, length:file.size, rangeChunkSize:1 << 20, disableAutoFetch:true, disableStream:true }, common)).promise;
+}
 async function loadSource(file){
   await engineReady;
   if (!isPdfFile(file)) throw new Error('"' + file.name + '" is not a PDF file.');
   if (!file.size) throw new Error('"' + file.name + '" is empty.');
-  var bytes = new Uint8Array(await file.arrayBuffer());
-  var head = ''; for (var i=0;i<Math.min(1024, bytes.length);i++) head += String.fromCharCode(bytes[i]);
-  if (head.indexOf('%PDF-') === -1) throw new Error('"' + file.name + '" is not a valid PDF (the PDF header is missing).');
+  var head = new Uint8Array(await file.slice(0, Math.min(file.size, 1 << 20)).arrayBuffer());
+  var hs = ''; for (var i=0;i<Math.min(1024, head.length);i++) hs += String.fromCharCode(head[i]);
+  if (hs.indexOf('%PDF-') === -1) throw new Error('"' + file.name + '" is not a valid PDF (the PDF header is missing).');
   var doc;
   try {
-    doc = await pdfjsLib.getDocument({ data:bytes.slice(), isEvalSupported:false, useSystemFonts:true }).promise;
+    doc = await openWithPdfJs(file, head);
   } catch(e) {
     if (e && e.name === 'PasswordException') throw new Error('"' + file.name + '" is password-protected. Remove the password in your PDF app, then upload it again.');
     throw new Error('"' + file.name + '" couldn\u2019t be opened. The file may be damaged or incomplete.');
@@ -574,7 +651,7 @@ async function loadSource(file){
   if (encrypted) { try { doc.destroy(); } catch(e){} throw new Error('"' + file.name + '" is encrypted with security restrictions. Remove the document security, then upload it again.'); }
   if (!doc.numPages) throw new Error('"' + file.name + '" has no pages.');
   var id = 's' + (S.src++);
-  var src = { id:id, name:file.name, size:file.size, bytes:bytes, doc:doc, count:doc.numPages, color:COLORS[(S.order.length) % COLORS.length], lib:null, pageCache:new Map() };
+  var src = { id:id, name:file.name, size:file.size, file:file, doc:doc, count:doc.numPages, color:COLORS[(S.order.length) % COLORS.length], pageCache:new Map() };
   S.sources.set(id, src); S.order.push(id);
   return src;
 }
@@ -706,8 +783,7 @@ function drawSynthetic(p, longSide){
   var ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
   if (p.kind === 'img') {
     var im = S.images.get(p.img), b = fitBox(p.w, p.h, im.w, im.h, p.m);
-    ctx.imageSmoothingQuality = 'high';
-    ctx.drawImage(im.el, b.x * s, (p.h - b.y - b.h) * s, b.w * s, b.h * s);
+    drawImageHQ(ctx, im.el, b.x * s, (p.h - b.y - b.h) * s, b.w * s, b.h * s);
   }
   return rotateCanvas(c, p.rot);
 }
@@ -731,7 +807,7 @@ function pump(){
   }
 }
 async function renderThumb(job){
-  var p = job.p, target = 260 * Math.min(window.devicePixelRatio || 1, 2), c;
+  var p = job.p, target = 320 * DPR(), c;
   if (p.kind !== 'pdf') {
     c = drawSynthetic(p, target);
   } else {
@@ -743,7 +819,7 @@ async function renderThumb(job){
     var ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
     await page.render({ canvasContext:ctx, viewport:vp }).promise;
   }
-  var blob = await new Promise(function(r){ c.toBlob(r, 'image/jpeg', 0.86); });
+  var blob = await new Promise(function(r){ c.toBlob(r, 'image/webp', 0.97); });
   c.width = c.height = 0;
   if (!blob) throw new Error('thumb');
   return URL.createObjectURL(blob);
@@ -826,7 +902,7 @@ function render(){
 
 function updateTools(){
   var has = S.pages.length > 0, n = S.sel.size;
-  var st = { add:true, insert:true, 'delete':n > 0, reorder:S.pages.length > 1, extract:n > 0, merge:true, replace:n > 0, rotate:n > 0 || !!S.active, undo:S.undo.length > 0, redo:S.redo.length > 0, download:has };
+  var st = { add:true, insert:true, 'delete':n > 0, reorder:has, extract:n > 0, merge:true, replace:n > 0, rotate:n > 0 || !!S.active, undo:S.undo.length > 0, redo:S.redo.length > 0, download:has };
   document.querySelectorAll('.tools [data-cmd]').forEach(function(b){ b.disabled = !st[b.dataset.cmd]; });
 }
 function renderFiles(){
@@ -971,13 +1047,13 @@ async function renderPreview(){
   if (key === PV.key) return;
   PV.key = key;
   if (PV.task) { try { PV.task.cancel(); } catch(e){} PV.task = null; }
-  var dpr = Math.min(window.devicePixelRatio || 1, 2), c, W, H, css;
+  var dpr = DPR(), c, W, H, css;
   if (p.kind !== 'pdf') {
     var sz = await pageSizeOf(p); W = sz[0]; H = sz[1];
     var extra = p.kind === 'img' ? 'image ' + S.images.get(p.img).w + ' × ' + S.images.get(p.img).h + ' px' : 'blank page';
     $('#pvInfo').textContent = mm(W) + ' × ' + mm(H) + ' mm, ' + orientName(W, H) + ', ' + extra;
     css = Math.max(0.05, Math.min((w - 32) / W, (h - 32) / H) * PV.zoom);
-    c = drawSynthetic(p, Math.min(Math.max(W, H) * css * dpr, 4096));
+    c = syntheticDom(p, css);
   } else {
     var src = S.sources.get(p.src), page;
     try { page = await getPdfPage(src, p.idx); } catch(e) { pvBody.innerHTML = '<div class="pv-empty">This page can\u2019t be previewed, but it will still be kept in the PDF.</div>'; return; }
@@ -986,7 +1062,7 @@ async function renderPreview(){
     var v1 = page.getViewport({ scale:1, rotation:rotation }); W = v1.width; H = v1.height;
     $('#pvInfo').textContent = mm(W) + ' × ' + mm(H) + ' mm, ' + orientName(W, H) + (p.rot ? ', rotated ' + p.rot + '°' : '');
     css = Math.max(0.05, Math.min((w - 32) / W, (h - 32) / H) * PV.zoom);
-    var rs = Math.min(css * dpr, 4096 / Math.max(W, H));
+    var rs = capScale(W, H, css * dpr);
     var vp = page.getViewport({ scale:rs, rotation:rotation });
     c = document.createElement('canvas'); c.width = Math.ceil(vp.width); c.height = Math.ceil(vp.height);
     var ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
@@ -1002,8 +1078,8 @@ new ResizeObserver(function(){ renderPreview(); }).observe(pvBody);
 function stepActive(d){ var i = indexOfUid(S.active) + d; if (i >= 0 && i < S.pages.length) { S.active = S.pages[i].uid; render(); var c = cards.get(S.active); if (c) c.scrollIntoView({ block:'nearest' }); } }
 $('#pvPrev').onclick = function(){ stepActive(-1); };
 $('#pvNext').onclick = function(){ stepActive(1); };
-$('#pvIn').onclick = function(){ PV.zoom = Math.min(4, +(PV.zoom + 0.25).toFixed(2)); renderPreview(); };
-$('#pvOut').onclick = function(){ PV.zoom = Math.max(0.5, +(PV.zoom - 0.25).toFixed(2)); renderPreview(); };
+$('#pvIn').onclick = function(){ PV.zoom = Math.min(8, +(PV.zoom + (PV.zoom >= 2 ? 0.5 : 0.25)).toFixed(2)); renderPreview(); };
+$('#pvOut').onclick = function(){ PV.zoom = Math.max(0.5, +(PV.zoom - (PV.zoom > 2 ? 0.5 : 0.25)).toFixed(2)); renderPreview(); };
 $('#pvFit').onclick = function(){ PV.zoom = 1; renderPreview(); };
 
 /* ---------- Dialog helpers ---------- */
@@ -1043,8 +1119,8 @@ function lightbox(caption, draw){
 }
 async function drawPdfPageFit(src, idx, bw, bh){
   var page = await getPdfPage(src, idx);
-  var v1 = page.getViewport({ scale:1 }), css = Math.min(bw / v1.width, bh / v1.height), dpr = Math.min(window.devicePixelRatio || 1, 2);
-  var vp = page.getViewport({ scale:Math.min(css * dpr, 4096 / Math.max(v1.width, v1.height)) });
+  var v1 = page.getViewport({ scale:1 }), css = Math.min(bw / v1.width, bh / v1.height), dpr = DPR();
+  var vp = page.getViewport({ scale:capScale(v1.width, v1.height, css * dpr) });
   var c = document.createElement('canvas'); c.width = Math.ceil(vp.width); c.height = Math.ceil(vp.height);
   var ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
   await page.render({ canvasContext:ctx, viewport:vp }).promise;
@@ -1073,6 +1149,40 @@ function readPosition(){
   var m = $('#posMode').value, n = parseInt($('#posNum').value, 10);
   n = Math.min(Math.max(isNaN(n) ? 1 : n, 1), S.pages.length || 1);
   return { mode:m, num:n };
+}
+
+/* ---------- Page-number lists: "1-19", "1 to 19", "3, 7, 10-12" ---------- */
+function parsePageList(str, n){
+  var set = new Set(), parts = String(str || '').split(/[,;]+/);
+  for (var i=0;i<parts.length;i++) {
+    var t = parts[i].trim().toLowerCase();
+    if (!t) continue;
+    var m = t.match(/^(\d+)\s*(?:-|\u2013|\u2014|to|se|till|until)\s*(\d+)$/);
+    if (m) {
+      var a = +m[1], b = +m[2]; if (a > b) { var x = a; a = b; b = x; }
+      if (a < 1 || b > n) return { err:'Page ' + (a < 1 ? a : b) + ' doesn\u2019t exist. This document has ' + plural(n, 'page') + '.' };
+      for (var k=a;k<=b;k++) set.add(k - 1);
+    } else if (/^\d+(\s+\d+)*$/.test(t)) {
+      var nums = t.split(/\s+/);
+      for (var j=0;j<nums.length;j++) {
+        var v = +nums[j];
+        if (v < 1 || v > n) return { err:'Page ' + v + ' doesn\u2019t exist. This document has ' + plural(n, 'page') + '.' };
+        set.add(v - 1);
+      }
+    } else {
+      return { err:'Couldn\u2019t read \u201c' + parts[i].trim() + '\u201d. Use numbers like 1-19, 25, 30-32.' };
+    }
+  }
+  return { idxs:Array.from(set).sort(function(a, b){ return a - b; }) };
+}
+function compactList(idxs){
+  var out = [], i = 0;
+  while (i < idxs.length) {
+    var j = i; while (j + 1 < idxs.length && idxs[j + 1] === idxs[j] + 1) j++;
+    out.push(i === j ? String(idxs[i] + 1) : (idxs[i] + 1) + '\u2013' + (idxs[j] + 1));
+    i = j + 1;
+  }
+  return out.join(', ');
 }
 
 /* ---------- Reusable PDF page picker ---------- */
@@ -1388,6 +1498,16 @@ function openReplace(){
 }
 
 /* ---------- Operations ---------- */
+function removePages(uids, msg){
+  if (!uids.length) return;
+  var set = new Set(uids), i = indexOfUid(uids[0]);
+  commit(function(){
+    S.pages = S.pages.filter(function(p){ return !set.has(p.uid); });
+    uids.forEach(function(u){ S.sel.delete(u); });
+    if (set.has(S.active)) S.active = S.pages[Math.min(i, S.pages.length - 1)] ? S.pages[Math.min(i, S.pages.length - 1)].uid : null;
+  });
+  toast(msg || ('Deleted ' + plural(uids.length, 'page') + '.'), 'ok', { label:'Undo', fn:undo });
+}
 async function deletePages(uids){
   if (!uids.length) return;
   var n = uids.length;
@@ -1398,13 +1518,7 @@ async function deletePages(uids){
     ok: 'Delete ' + plural(n, 'page'), danger:true
   });
   if (!ok) return;
-  var set = new Set(uids), i = indexOfUid(uids[0]);
-  commit(function(){
-    S.pages = S.pages.filter(function(p){ return !set.has(p.uid); });
-    uids.forEach(function(u){ S.sel.delete(u); });
-    if (set.has(S.active)) S.active = S.pages[Math.min(i, S.pages.length - 1)] ? S.pages[Math.min(i, S.pages.length - 1)].uid : null;
-  });
-  toast('Deleted ' + plural(n, 'page') + '.', 'ok', { label:'Undo', fn:undo });
+  removePages(uids);
 }
 function rotatePages(uids){
   if (!uids.length) return;
@@ -1412,17 +1526,56 @@ function rotatePages(uids){
   commit(function(){ S.pages.forEach(function(p){ if (set.has(p.uid)) p.rot = (p.rot + 90) % 360; }); });
 }
 function openReorder(){
-  var k = S.sel.size, def = { mode:'before', num:1 };
+  var k = S.sel.size, def = { mode:'before', num:1 }, N = S.pages.length;
   openDialog(
     '<div class="dh"><div><h3>Reorder pages</h3><p>Drag pages in the grid to move them. Dragging a selected page moves all selected pages together. Or use one of these:</p></div>' +
     '<button class="btn sm icon ghost x" type="button" data-close aria-label="Close">' + icon('x') + '</button></div>' +
     '<div class="db">' +
-      '<div class="opt"><div><h4>Move selected pages</h4><p>' + (k ? plural(k, 'page') + ' selected. They keep their current order.' : 'Select pages in the grid first.') + '</p>' + (k ? positionControl(def) : '') + '</div>' + (k ? '<button class="btn primary" type="button" id="roMove">Move pages</button>' : '') + '</div>' +
+      '<div class="opt"><div class="grow"><h4>Delete or select pages by number</h4><p>Type page numbers or ranges, for example <b>1-19</b>, <b>1 to 19</b> or <b>2, 5, 10-12</b>. This document has ' + plural(N, 'page') + '.</p>' +
+        '<div class="field"><input class="in" id="roNums" type="text" inputmode="text" autocomplete="off" spellcheck="false" placeholder="e.g. 1-19" style="flex:1;min-width:180px" aria-label="Page numbers" aria-describedby="roNumsMsg"></div>' +
+        '<p class="note" id="roNumsMsg">Pages are counted as they are numbered in the grid right now.</p></div>' +
+        '<div class="rbtns"><button class="btn" type="button" id="roSelNums" disabled>Select</button><button class="btn danger-solid" type="button" id="roDelNums" disabled>' + icon('trash') + 'Delete</button></div></div>' +
+      '<div class="opt"><div><h4>Move selected pages</h4><p>' + (k ? plural(k, 'page') + ' selected. They keep their current order.' : 'Select pages in the grid first, or select them by number above.') + '</p>' + (k ? positionControl(def) : '') + '</div>' + (k ? '<button class="btn primary" type="button" id="roMove">Move pages</button>' : '') + '</div>' +
       '<div class="opt"><div><h4>Reverse page order</h4><p>The last page becomes the first.</p></div><button class="btn" type="button" id="roRev">Reverse</button></div>' +
       '<div class="opt"><div><h4>Restore file order</h4><p>Sort PDF pages by file, then by their original page number. Images and blank pages stay where they are.</p></div><button class="btn" type="button" id="roSort">Sort</button></div>' +
     '</div>' +
     '<div class="df"><button class="btn" type="button" data-close>Done</button></div>'
   );
+
+  /* Delete / select by page number */
+  var numsIn = $('#roNums'), numsMsg = $('#roNumsMsg'), delBtn = $('#roDelNums'), selBtn = $('#roSelNums'), parsed = null;
+  function syncNums(){
+    var v = numsIn.value.trim();
+    parsed = null; numsIn.classList.remove('bad'); numsMsg.className = 'note';
+    if (!v) { numsMsg.textContent = 'Pages are counted as they are numbered in the grid right now.'; delBtn.disabled = selBtn.disabled = true; delBtn.innerHTML = icon('trash') + 'Delete'; return; }
+    var r = parsePageList(v, N);
+    if (r.err) { numsIn.classList.add('bad'); numsMsg.className = 'note err'; numsMsg.textContent = r.err; delBtn.disabled = selBtn.disabled = true; delBtn.innerHTML = icon('trash') + 'Delete'; return; }
+    if (!r.idxs.length) { delBtn.disabled = selBtn.disabled = true; return; }
+    parsed = r.idxs;
+    var c = parsed.length;
+    if (c === N) { numsMsg.className = 'note warn'; numsMsg.textContent = 'This is every page in the document (' + compactList(parsed) + ').'; }
+    else numsMsg.textContent = plural(c, 'page') + ': ' + compactList(parsed) + '. ' + plural(N - c, 'page') + ' will remain after deleting.';
+    delBtn.disabled = selBtn.disabled = false;
+    delBtn.innerHTML = icon('trash') + 'Delete ' + plural(c, 'page');
+  }
+  numsIn.addEventListener('input', syncNums);
+  numsIn.addEventListener('keydown', function(e){ if (e.key === 'Enter' && parsed) { e.preventDefault(); delBtn.click(); } });
+  delBtn.onclick = function(){
+    if (!parsed) return;
+    var idxs = parsed, uids = idxs.map(function(i){ return S.pages[i].uid; });
+    dlg.close();
+    removePages(uids, 'Deleted ' + plural(uids.length, 'page') + ' (' + compactList(idxs) + ').');
+  };
+  selBtn.onclick = function(){
+    if (!parsed) return;
+    S.sel = new Set(parsed.map(function(i){ return S.pages[i].uid; }));
+    S.active = S.pages[parsed[0]].uid; S.anchor = S.active;
+    dlg.close(); render();
+    var c = cards.get(S.active); if (c) c.scrollIntoView({ block:'center', behavior:'smooth' });
+    toast('Selected ' + plural(parsed.length, 'page') + '.', 'ok');
+  };
+  setTimeout(function(){ numsIn.focus(); }, 0);
+
   if (k) {
     wirePosition(def);
     $('#roMove').onclick = function(){
@@ -1451,52 +1604,105 @@ function openReorder(){
     toast('PDF pages sorted by file order.', 'ok', { label:'Undo', fn:undo });
   };
 }
-function openMerge(){
-  var files = [], has = S.pages.length > 0;
+function openMerge(initial, opts){
+  opts = opts || {};
+  var items = [], has = S.pages.length > 0, seq = 0, sorter = null;
+  var atTxt = typeof opts.at === 'number' && has ? betweenText(opts.at) : null;
   openDialog(
-    '<div class="dh"><div><h3>Merge PDFs</h3><p>Choose the PDFs to combine and set their order. Every page is copied without changes.</p></div>' +
+    '<div class="dh"><div><h3>Merge PDFs \u2014 set the order</h3><p>The file at the top goes first, the next one after it, and so on. Drag a file, use the arrows, or pick its position number. Every page is copied without changes, so quality stays exactly as in the originals.</p></div>' +
     '<button class="btn sm icon ghost x" type="button" data-close aria-label="Close">' + icon('x') + '</button></div>' +
-    '<div class="db"><div id="mgList"></div>' +
-      '<div class="field"><button class="btn" type="button" id="mgAdd">' + icon('add') + 'Choose PDFs</button></div>' +
-      (has ? '<div class="pos"><label class="radio"><input type="radio" name="mgMode" value="append" checked><span>Add after the current pages<small>Keeps your current ' + plural(S.pages.length, 'page') + ' first.</small></span></label>' +
+    '<div class="db">' +
+      '<div class="mg-tools"><button class="btn" type="button" id="mgAdd">' + icon('add') + 'Add PDFs</button>' +
+        '<button class="btn sm ghost" type="button" id="mgAZ">Sort by name A\u2013Z</button>' +
+        '<button class="btn sm ghost" type="button" id="mgRev">Reverse order</button></div>' +
+      '<div class="list" id="mgList"></div>' +
+      '<div class="pk-empty mg-empty" id="mgEmpty">No files yet. Click <b>Add PDFs</b> or drop PDF files here.</div>' +
+      '<p class="note" id="mgTotal"></p>' +
+      (has ? '<div class="pos"><label class="radio"><input type="radio" name="mgMode" value="append" checked><span>' + (atTxt ? 'Insert here: ' + esc(atTxt.charAt(0).toLowerCase() + atTxt.slice(1)) : 'Add after the current pages') + '<small>Keeps your current ' + plural(S.pages.length, 'page') + '.</small></span></label>' +
              '<label class="radio"><input type="radio" name="mgMode" value="new"><span>Start a new document<small>Replaces the current pages with the merged files. You can undo this.</small></span></label></div>' : '') +
     '</div>' +
     '<div class="df"><button class="btn" type="button" data-close>Cancel</button><button class="btn primary" type="button" id="mgOk" disabled>Merge PDFs</button></div>'
   );
-  function draw(){
-    var l = $('#mgList');
-    l.innerHTML = files.length ? '<div class="list">' + files.map(function(f, i){
-      return '<div class="row"><span class="idx">' + (i + 1) + '</span><span class="nm" title="' + esc(f.name) + '">' + esc(f.name) + '</span><span class="mt">' + fmtSize(f.size) + '</span>' +
-        '<button class="btn sm icon ghost" type="button" data-mv="up" data-i="' + i + '" aria-label="Move up"' + (i ? '' : ' disabled') + '>' + icon('up') + '</button>' +
-        '<button class="btn sm icon ghost" type="button" data-mv="down" data-i="' + i + '" aria-label="Move down"' + (i < files.length - 1 ? '' : ' disabled') + '>' + icon('down') + '</button>' +
-        '<button class="btn sm icon ghost" type="button" data-mv="rm" data-i="' + i + '" aria-label="Remove">' + icon('x') + '</button></div>';
-    }).join('') + '</div>' : '<div class="pk-empty" style="background:var(--surface);border-radius:12px">No files chosen yet.</div>';
-    $('#mgOk').disabled = !files.length;
-    $('#mgOk').textContent = files.length ? 'Merge ' + plural(files.length, 'file') : 'Merge PDFs';
+  var list = $('#mgList');
+  function move(from, to){
+    if (to < 0 || to >= items.length || from === to) return;
+    var it = items.splice(from, 1)[0]; items.splice(to, 0, it); draw(it.key);
   }
-  $('#mgList').addEventListener('click', function(e){
-    var b = e.target.closest('[data-mv]'); if (!b) return;
-    var i = +b.dataset.i, t;
-    if (b.dataset.mv === 'up' && i > 0) { t = files[i-1]; files[i-1] = files[i]; files[i] = t; }
-    else if (b.dataset.mv === 'down' && i < files.length - 1) { t = files[i+1]; files[i+1] = files[i]; files[i] = t; }
-    else if (b.dataset.mv === 'rm') files.splice(i, 1);
+  function draw(focusKey){
+    var n = items.length;
+    list.hidden = !n; $('#mgEmpty').hidden = !!n;
+    list.innerHTML = items.map(function(it, i){
+      var s = it.src, posOpts = '';
+      for (var k=0;k<n;k++) posOpts += '<option value="' + k + '"' + (k === i ? ' selected' : '') + '>' + (k + 1) + '</option>';
+      return '<div class="row mg-row" data-k="' + it.key + '">' +
+        '<span class="grip" title="Drag to reorder" aria-hidden="true">' + icon('grip') + '</span>' +
+        '<select class="in mg-pos" data-pos aria-label="Position of ' + esc(s.name) + '">' + posOpts + '</select>' +
+        '<span class="mg-thumb"><img alt="" draggable="false"></span>' +
+        '<span class="mg-name"><span class="nm" title="' + esc(s.name) + '">' + esc(s.name) + '</span><span class="mt">' + (i === 0 ? 'First \u00b7 ' : i === n - 1 ? 'Last \u00b7 ' : '') + plural(s.count, 'page') + ' \u00b7 ' + fmtSize(s.size) + '</span></span>' +
+        '<button class="btn sm icon ghost" type="button" data-mv="up" aria-label="Move up"' + (i ? '' : ' disabled') + '>' + icon('up') + '</button>' +
+        '<button class="btn sm icon ghost" type="button" data-mv="down" aria-label="Move down"' + (i < n - 1 ? '' : ' disabled') + '>' + icon('down') + '</button>' +
+        '<button class="btn sm icon ghost" type="button" data-mv="rm" aria-label="Remove ' + esc(s.name) + '">' + icon('x') + '</button></div>';
+    }).join('');
+    list.querySelectorAll('.mg-row').forEach(function(row){
+      var it = items.find(function(x){ return x.key === row.dataset.k; });
+      getThumb({ kind:'pdf', src:it.src.id, idx:0, rot:0 }).then(function(url){ var im = row.querySelector('img'); if (im) im.src = url; }, function(){});
+    });
+    var size = items.reduce(function(a, it){ return a + it.src.size; }, 0), pages = items.reduce(function(a, it){ return a + it.src.count; }, 0);
+    var t = $('#mgTotal');
+    if (!n) { t.textContent = ''; t.className = 'note'; }
+    else if (size > BIG_TOTAL) { t.className = 'note warn'; t.textContent = 'Total ' + plural(pages, 'page') + ', ' + fmtSize(size) + '. This is very large: use Chrome or Edge on a computer with at least 8 GB of RAM, close other tabs, and keep this tab open while it saves.'; }
+    else { t.className = 'note'; t.textContent = 'Total ' + plural(pages, 'page') + ', ' + fmtSize(size) + '.'; }
+    var ok = $('#mgOk'); ok.disabled = !n;
+    ok.textContent = n ? 'Merge ' + plural(n, 'file') + ' in this order' : 'Merge PDFs';
+    if (focusKey) { var r = list.querySelector('[data-k="' + focusKey + '"] [data-pos]'); if (r) r.focus(); }
+  }
+  async function addFiles(files){
+    files = Array.from(files || []);
+    var pdfs = files.filter(isPdfFile);
+    if (files.length > pdfs.length) toast(plural(files.length - pdfs.length, 'file') + ' skipped: not a PDF.', 'error');
+    var srcs = await ingest(pdfs);
+    srcs.forEach(function(s){ items.push({ key:'m' + (++seq), src:s }); });
     draw();
+  }
+  list.addEventListener('click', function(e){
+    var b = e.target.closest('[data-mv]'); if (!b) return;
+    var row = b.closest('.mg-row'), i = items.findIndex(function(x){ return x.key === row.dataset.k; });
+    if (b.dataset.mv === 'up') move(i, i - 1);
+    else if (b.dataset.mv === 'down') move(i, i + 1);
+    else { items.splice(i, 1); draw(); }
   });
-  $('#mgAdd').onclick = async function(){ var f = await pickFiles(true); files = files.concat(f); draw(); };
-  $('#mgOk').onclick = async function(){
+  list.addEventListener('change', function(e){
+    var s = e.target.closest('[data-pos]'); if (!s) return;
+    var row = s.closest('.mg-row'), i = items.findIndex(function(x){ return x.key === row.dataset.k; });
+    move(i, +s.value);
+  });
+  if (window.Sortable) sorter = Sortable.create(list, { animation:150, delay:150, delayOnTouchOnly:true, draggable:'.mg-row', filter:'button,select', preventOnFilter:false, ghostClass:'ghost-card',
+    onEnd:function(){ var order = Array.from(list.children).map(function(r){ return r.dataset.k; }); items.sort(function(a, b){ return order.indexOf(a.key) - order.indexOf(b.key); }); draw(); } });
+  $('#mgAdd').onclick = async function(){ addFiles(await pickFiles(true)); };
+  $('#mgAZ').onclick = function(){ items.sort(function(a, b){ return a.src.name.localeCompare(b.src.name, undefined, { numeric:true, sensitivity:'base' }); }); draw(); };
+  $('#mgRev').onclick = function(){ items.reverse(); draw(); };
+  var body = dlg.querySelector('.db');
+  body.addEventListener('dragover', function(e){ if (hasFiles(e)) { e.preventDefault(); body.style.outline = '2px dashed var(--accent)'; body.style.outlineOffset = '-6px'; } });
+  body.addEventListener('dragleave', function(e){ if (!body.contains(e.relatedTarget)) body.style.outline = ''; });
+  body.addEventListener('drop', function(e){ if (!hasFiles(e)) return; e.preventDefault(); e.stopPropagation(); body.style.outline = ''; addFiles(e.dataTransfer.files); });
+  dlg._onclose = function(){ if (sorter) { sorter.destroy(); sorter = null; } };
+  $('#mgOk').onclick = function(){
+    if (!items.length) return;
     var mode = has ? (dlg.querySelector('input[name=mgMode]:checked') || {}).value : 'append';
-    var list = files.slice(); dlg.close();
-    var srcs = await ingest(list); if (!srcs.length) return;
+    var order = items.slice(); dlg.close();
     var add = [];
+    order.forEach(function(it){ for (var i=0;i<it.src.count;i++) add.push(newPage(it.src.id, i)); });
     commit(function(){
-      srcs.forEach(function(s){ for (var i=0;i<s.count;i++) add.push(newPage(s.id, i)); });
-      if (mode === 'new') { S.pages = add; S.sel = new Set(); S.active = add[0].uid; }
+      if (mode === 'new' || !S.pages.length) { S.pages = add; S.sel = new Set(); S.active = add[0].uid; }
+      else if (typeof opts.at === 'number') Array.prototype.splice.apply(S.pages, [Math.max(0, Math.min(opts.at, S.pages.length)), 0].concat(add));
       else S.pages = S.pages.concat(add);
       S.flash = new Set(add.map(function(p){ return p.uid; }));
     });
-    toast('Merged ' + plural(srcs.length, 'file') + ' (' + plural(add.length, 'page') + ').', 'ok', { label:'Undo', fn:undo });
+    toast('Merged ' + plural(order.length, 'file') + ' in your order (' + plural(add.length, 'page') + '). Click Download PDF to save it.', 'ok', { label:'Undo', fn:undo });
+    var c = cards.get(add[0].uid); if (c) c.scrollIntoView({ block:'center', behavior:'smooth' });
   };
   draw();
+  if (initial && initial.length) addFiles(initial);
 }
 
 /* Add files (PDFs and images) at a position — used by drag & drop and the start screen */
@@ -1523,41 +1729,60 @@ async function insertFiles(files, at){
 }
 
 /* ---------- Building the output PDF ----------
-   PDF pages: copied as original page objects (no rasterizing).
-   Image pages: original image data embedded and placed on a vector page. */
+   PDF pages: copied as original page objects (no rasterizing, no recompression).
+   Image pages: original image data embedded and placed on a vector page.
+
+   Large-file design:
+   - Source files are read one at a time. After a file's pages are copied, its parsed
+     copy is released, so memory never holds every source at once.
+   - The output is written in small pieces straight into a Blob (the browser can keep
+     big Blobs on disk), instead of one giant memory buffer. Each object is released as
+     soon as it is written. This is what lets 1–2 GB merges finish. */
+function readMeta(lib){
+  var m = {};
+  try { m.title = lib.getTitle(); m.author = lib.getAuthor(); m.subject = lib.getSubject(); m.keywords = lib.getKeywords();
+        m.creator = lib.getCreator(); m.producer = lib.getProducer(); m.created = lib.getCreationDate(); } catch(e){}
+  return m;
+}
 async function buildPdf(list){
   progress.show('Preparing PDF', 0.02);
   try {
-    var used = []; list.forEach(function(p){ if (p.kind === 'pdf' && used.indexOf(p.src) < 0) used.push(p.src); });
-    for (var i=0;i<used.length;i++) {
-      var s = S.sources.get(used[i]);
-      if (!s.lib) {
-        progress.set('Reading ' + s.name, 0.05 + 0.3 * i / used.length); await tick();
-        try { s.lib = await PDFDocument.load(s.bytes, { updateMetadata:false, parseSpeed:ParseSpeeds.Fast }); }
-        catch(e) { throw new Error('"' + s.name + '" couldn\u2019t be processed' + (/encrypt/i.test(e && e.message) ? ' because it is encrypted.' : '. Its internal structure may be damaged.')); }
-      }
-    }
     var out = await PDFDocument.create({ updateMetadata:false });
-    var need = new Map();
-    list.forEach(function(p){ if (p.kind !== 'pdf') return; var m = need.get(p.src) || new Map(); m.set(p.idx, (m.get(p.idx) || 0) + 1); need.set(p.src, m); });
-    var copied = new Map(), done = 0, total = list.length;
+    var need = new Map(), totalPdf = 0;
+    list.forEach(function(p){ if (p.kind !== 'pdf') return; var m = need.get(p.src) || new Map(); m.set(p.idx, (m.get(p.idx) || 0) + 1); need.set(p.src, m); totalPdf++; });
+    var firstPdf = list.find(function(p){ return p.kind === 'pdf'; }), meta = null;
+    var copied = new Map(), done = 0, si = 0, nSrc = need.size;
     for (var entry of need) {
-      var sid = entry[0], m = entry[1], src = S.sources.get(sid);
+      var sid = entry[0], m = entry[1], src = S.sources.get(sid), bytes = null, lib = null;
+      si++;
+      var tag = nSrc > 1 ? ' (' + si + ' of ' + nSrc + ')' : '';
+      progress.set('Reading ' + src.name + ', ' + fmtSize(src.size) + tag, 0.03 + 0.62 * done / Math.max(1, totalPdf)); await tick();
+      try { bytes = new Uint8Array(await src.file.arrayBuffer()); }
+      catch(e) { throw new Error('"' + src.name + '" couldn\u2019t be read. It may be too large for this browser\u2019s memory, or the file was moved or changed after you added it. Try Chrome or Edge on a computer and close other tabs.'); }
+      try { lib = await PDFDocument.load(bytes, { updateMetadata:false, parseSpeed:ParseSpeeds.Fast }); }
+      catch(e) { bytes = null; throw new Error('"' + src.name + '" couldn\u2019t be processed' + (/encrypt/i.test(e && e.message) ? ' because it is encrypted.' : '. Its internal structure may be damaged.')); }
+      bytes = null;
+      if (firstPdf && sid === firstPdf.src) meta = readMeta(lib);
       // One copy pass per source keeps shared fonts/images stored once. Pages used more than once get extra passes.
       for (var round=0;;round++) {
         var idxs = []; m.forEach(function(c, idx){ if (c > round) idxs.push(idx); });
         if (!idxs.length) break;
-        progress.set('Copying pages from ' + src.name, 0.35 + 0.35 * done / total); await tick();
-        var pages = await out.copyPages(src.lib, idxs);
-        idxs.forEach(function(idx, j){ copied.set(sid + '|' + idx + '|' + round, pages[j]); });
-        done += idxs.length;
+        for (var a=0;a<idxs.length;a+=200) {
+          // Copy in batches so the progress bar moves on documents with thousands of pages.
+          var batch = idxs.slice(a, a + 200);
+          var pages = await out.copyPages(lib, batch);
+          batch.forEach(function(idx, j){ copied.set(sid + '|' + idx + '|' + round, pages[j]); });
+          done += batch.length;
+          progress.set('Copying pages from ' + src.name + tag + ' \u2014 ' + done + ' of ' + totalPdf, 0.03 + 0.62 * done / Math.max(1, totalPdf)); await tick();
+        }
       }
+      lib = null; await tick();
     }
     var embedded = new Map(), imgIds = [];
     list.forEach(function(p){ if (p.kind === 'img' && imgIds.indexOf(p.img) < 0) imgIds.push(p.img); });
     for (var j=0;j<imgIds.length;j++) {
       var im = S.images.get(imgIds[j]);
-      progress.set('Embedding ' + im.name, 0.7 + 0.12 * j / imgIds.length); await tick();
+      progress.set('Embedding ' + im.name, 0.65 + 0.05 * j / imgIds.length); await tick();
       try { embedded.set(im.id, im.fmt === 'jpg' ? await out.embedJpg(im.bytes) : await out.embedPng(im.bytes)); }
       catch(e) { throw new Error('The image "' + im.name + '" couldn\u2019t be embedded. Try saving it as JPG or PNG.'); }
     }
@@ -1574,25 +1799,65 @@ async function buildPdf(list){
       }
       if (p.rot) { var a = (pg.getRotation().angle || 0) + p.rot; pg.setRotation(degrees(((a % 360) + 360) % 360)); }
     });
-    var firstPdf = list.find(function(p){ return p.kind === 'pdf'; });
+    copied.clear();
     try {
-      if (firstPdf) {
-        var meta = S.sources.get(firstPdf.src).lib, v;
-        if ((v = meta.getTitle())) out.setTitle(v);
-        if ((v = meta.getAuthor())) out.setAuthor(v);
-        if ((v = meta.getSubject())) out.setSubject(v);
-        if ((v = meta.getKeywords())) out.setKeywords([v]);
-        if ((v = meta.getCreator())) out.setCreator(v);
-        if ((v = meta.getProducer())) out.setProducer(v);
-        if ((v = meta.getCreationDate())) out.setCreationDate(v);
+      if (meta) {
+        if (meta.title) out.setTitle(meta.title);
+        if (meta.author) out.setAuthor(meta.author);
+        if (meta.subject) out.setSubject(meta.subject);
+        if (meta.keywords) out.setKeywords([meta.keywords]);
+        if (meta.creator) out.setCreator(meta.creator);
+        if (meta.producer) out.setProducer(meta.producer);
+        if (meta.created) out.setCreationDate(meta.created);
       } else { out.setCreationDate(new Date()); }
       out.setModificationDate(new Date());
     } catch(e){}
-    progress.set('Writing PDF', 0.85); await tick();
-    var bytes = await out.save({ objectsPerTick:200, updateFieldAppearances:false });
-    progress.set('Done', 1);
-    return bytes;
+    if (typeof out.flush === 'function') await out.flush();
+    else for (var e of embedded.values()) await e.embed();
+    return await writeToBlob(out, function(f){ progress.set('Writing PDF \u2014 ' + Math.round(f * 100) + '%', 0.7 + 0.29 * f); });
   } finally { progress.hide(); }
+}
+// Streams the finished document into a Blob in ~16 MB pieces with a classic xref table.
+async function writeToBlob(doc, onProgress){
+  var ctx = doc.context, te = new TextEncoder();
+  var parts = [], buf = [], bufSize = 0, offset = 0, CHUNK = 16 * 1048576;
+  function put(u8){ buf.push(u8); bufSize += u8.length; offset += u8.length; if (bufSize >= CHUNK) { parts.push(new Blob(buf)); buf = []; bufSize = 0; } }
+  function putStr(s){ put(te.encode(s)); }
+  put(new Uint8Array([0x25,0x50,0x44,0x46,0x2D,0x31,0x2E,0x37,0x0A,0x25,0x81,0x81,0x81,0x81,0x0A,0x0A])); // %PDF-1.7 + binary marker
+  var objs = ctx.enumerateIndirectObjects(), total = objs.length, entries = [];
+  for (var i=0;i<total;i++) {
+    var ref = objs[i][0], obj = objs[i][1];
+    entries.push([ref.objectNumber, offset, ref.generationNumber]);
+    putStr(ref.objectNumber + ' ' + ref.generationNumber + ' obj\n');
+    var b = new Uint8Array(obj.sizeInBytes()); obj.copyBytesInto(b, 0); put(b);
+    putStr('\nendobj\n\n');
+    objs[i] = null;
+    if (typeof ctx.delete === 'function') ctx.delete(ref);   // free memory as we go
+    if (i % 250 === 249) { onProgress(i / total); await tick(); }
+  }
+  // Cross-reference table, written as runs of consecutive object numbers.
+  var xrefAt = offset, pad = function(n, w){ var s = String(n); while (s.length < w) s = '0' + s; return s; };
+  entries.sort(function(a, b){ return a[0] - b[0]; });
+  entries.unshift([0, 0, 65535, true]);
+  var lines = ['xref\n'], k = 0;
+  while (k < entries.length) {
+    var j = k; while (j + 1 < entries.length && entries[j + 1][0] === entries[j][0] + 1) j++;
+    lines.push(entries[k][0] + ' ' + (j - k + 1) + '\n');
+    for (var q=k;q<=j;q++) {
+      var en = entries[q];
+      lines.push(en[3] ? '0000000000 65535 f\r\n' : pad(en[1], 10) + ' ' + pad(en[2], 5) + ' n\r\n');
+      if (lines.length >= 50000) { putStr(lines.join('')); lines = []; }
+    }
+    k = j + 1;
+  }
+  putStr(lines.join(''));
+  var ti = ctx.trailerInfo, t = { Size:ctx.largestObjectNumber + 1, Root:ti.Root };
+  if (ti.Info) t.Info = ti.Info;
+  if (ti.ID) t.ID = ti.ID;
+  putStr('trailer\n' + ctx.obj(t).toString() + '\nstartxref\n' + xrefAt + '\n%%EOF\n');
+  if (buf.length) parts.push(new Blob(buf));
+  onProgress(1);
+  return new Blob(parts, { type:'application/pdf' });
 }
 // Places the image at full resolution, fitted inside the page. EXIF rotation is applied as a
 // drawing transform, so JPEG data stays byte-for-byte unchanged.
@@ -1603,8 +1868,7 @@ function drawImageOnPage(pg, emb, im, p){
   else if (o === 3) pg.drawImage(emb, { x:b.x + b.w, y:b.y + b.h, width:b.w, height:b.h, rotate:degrees(180) });
   else pg.drawImage(emb, { x:b.x, y:b.y, width:b.w, height:b.h });
 }
-async function saveFile(bytes, filename){
-  var blob = new Blob([bytes], { type:'application/pdf' });
+async function saveFile(blob, filename){
   var dl = await downloadsCap;
   if (dl) {
     try { await dl.save({ filename:filename, data:blob }); toast('Saved ' + filename + ' (' + fmtSize(blob.size) + ').', 'ok'); return; }
@@ -1612,27 +1876,33 @@ async function saveFile(bytes, filename){
       var c = e && e.code;
       if (c === 'declined') { toast('Download cancelled.', 'info'); return; }
       if (c === 'rate_limited') { toast('A save prompt is already open.', 'info'); return; }
-      if (c === 'too_large') { toast('This file is too large to save here.', 'error'); return; }
+      if (c === 'too_large') { toast('This file is too large to save in this app. Open the page in a desktop browser to save it.', 'error'); return; }
     }
   }
   var url = URL.createObjectURL(blob), a = document.createElement('a');
   a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(function(){ URL.revokeObjectURL(url); }, 60000);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 120000);
   toast('Downloaded ' + filename + ' (' + fmtSize(blob.size) + ').', 'ok');
 }
 async function exportPages(list, suffix){
   if (!list.length) return;
   var firstPdf = list.find(function(p){ return p.kind === 'pdf'; });
   var name = baseName(firstPdf ? S.sources.get(firstPdf.src).name : 'document') + suffix + '.pdf';
-  var bytes;
-  try { bytes = await buildPdf(list); }
-  catch(e) { toast(e.message || 'The PDF couldn\u2019t be created.', 'error'); return; }
-  await saveFile(bytes, name);
+  var blob;
+  try { blob = await buildPdf(list); }
+  catch(e) {
+    var msg = e && e.message;
+    if (!msg || /allocation|memory|Array buffer|Invalid typed array length/i.test(msg)) msg = 'The browser ran out of memory while building the PDF. Close other tabs and try again in Chrome or Edge on a computer.';
+    toast(msg, 'error'); return;
+  }
+  await saveFile(blob, name);
 }
 
 /* ---------- Commands ---------- */
 var commands = {
-  add: async function(){ var f = await pickFiles(true); var srcs = await ingest(f); if (!srcs.length) return;
+  add: async function(){ var f = (await pickFiles(true)).filter(isPdfFile); if (!f.length) return;
+    if (f.length > 1) { openMerge(f); return; }
+    var srcs = await ingest(f); if (!srcs.length) return;
     var add = []; srcs.forEach(function(s){ for (var i=0;i<s.count;i++) add.push(newPage(s.id, i)); });
     insertPagesAt(add, S.pages.length, 'page', 'Added ' + plural(add.length, 'page') + ' from ' + plural(srcs.length, 'file') + '.'); },
   insert: function(){ openInsert({}); },
@@ -1712,6 +1982,8 @@ document.addEventListener('drop', async function(e){
   var at = dropAt; hideMark();
   if (dlg.open) return;
   var files = Array.from(e.dataTransfer.files || []);
+  var pdfs = files.filter(isPdfFile);
+  if (pdfs.length > 1 && pdfs.length === files.length) { openMerge(pdfs, S.pages.length && at != null ? { at:at } : {}); return; }
   if (!S.pages.length) {
     // Start screen: keep the old behavior of combining PDFs in order; images become pages too.
     await insertFiles(files, 0);
