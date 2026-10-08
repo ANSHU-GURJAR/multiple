@@ -328,6 +328,17 @@ select.in.mg-pos{height:32px;width:58px;padding:0 6px;font-weight:600;font-varia
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:.001ms!important;transition:none!important}
 }
+
+/* Delete range dialog */
+.rng{display:flex;gap:12px 20px;flex-wrap:wrap}
+.rng .field{margin:0;flex-direction:column;align-items:flex-start;gap:6px}
+.rng input.in[type=number]{width:130px;height:46px;font-size:18px;font-weight:600}
+.dr-strip{display:flex;align-items:center;gap:12px;margin-top:14px;padding:12px;background:var(--surface);border-radius:12px}
+.dr-th{margin:0;width:96px;flex:none;text-align:center;font-size:12.5px;color:var(--muted)}
+.dr-th .sheet{background:var(--card);margin-bottom:4px}
+.dr-th .sheet img{display:block;max-width:calc(100% - 10px);max-height:calc(100% - 10px);background:#fff;box-shadow:var(--sheet-shadow)}
+.dr-th .sheet img:not([src]){visibility:hidden}
+.dr-mid{flex:1;text-align:center;color:var(--danger);font-weight:600;font-size:14px}
 </style>
 </head>
 <body>
@@ -405,6 +416,7 @@ select.in.mg-pos{height:32px;width:58px;padding:0 6px;font-weight:600;font-varia
       <button class="btn" data-cmd="add" type="button"><svg class="i"><use href="#i-add"/></svg>Add PDF</button>
       <button class="btn" data-cmd="insert" type="button"><svg class="i"><use href="#i-insert"/></svg>Insert Pages</button>
       <button class="btn danger" data-cmd="delete" type="button"><svg class="i"><use href="#i-trash"/></svg>Delete Selected</button>
+      <button class="btn danger" data-cmd="delrange" type="button"><svg class="i"><use href="#i-trash"/></svg>Delete Range</button>
       <button class="btn" data-cmd="reorder" type="button"><svg class="i"><use href="#i-reorder"/></svg>Reorder Pages</button>
       <button class="btn" data-cmd="extract" type="button"><svg class="i"><use href="#i-extract"/></svg>Extract Selected</button>
       <button class="btn" data-cmd="merge" type="button"><svg class="i"><use href="#i-merge"/></svg>Merge PDFs</button>
@@ -902,7 +914,7 @@ function render(){
 
 function updateTools(){
   var has = S.pages.length > 0, n = S.sel.size;
-  var st = { add:true, insert:true, 'delete':n > 0, reorder:has, extract:n > 0, merge:true, replace:n > 0, rotate:n > 0 || !!S.active, undo:S.undo.length > 0, redo:S.redo.length > 0, download:has };
+  var st = { add:true, insert:true, 'delete':n > 0, delrange:has, reorder:has, extract:n > 0, merge:true, replace:n > 0, rotate:n > 0 || !!S.active, undo:S.undo.length > 0, redo:S.redo.length > 0, download:has };
   document.querySelectorAll('.tools [data-cmd]').forEach(function(b){ b.disabled = !st[b.dataset.cmd]; });
 }
 function renderFiles(){
@@ -1525,6 +1537,72 @@ function rotatePages(uids){
   var set = new Set(uids);
   commit(function(){ S.pages.forEach(function(p){ if (set.has(p.uid)) p.rot = (p.rot + 90) % 360; }); });
 }
+
+/* ---------- Delete a range of pages: From X To Y ---------- */
+function openDeleteRange(){
+  var N = S.pages.length; if (!N) return;
+  var sel = selectedPages(), d1 = '', d2 = '';
+  if (sel.length) { d1 = indexOfUid(sel[0].uid) + 1; d2 = indexOfUid(sel[sel.length - 1].uid) + 1; }
+  openDialog(
+    '<div class="dh"><div><h3>Delete a range of pages</h3><p>Enter the first and last page. Both of them, and every page in between, will be deleted. This document has ' + plural(N, 'page') + '.</p></div>' +
+    '<button class="btn sm icon ghost x" type="button" data-close aria-label="Close">' + icon('x') + '</button></div>' +
+    '<div class="db">' +
+      '<div class="rng">' +
+        '<div class="field"><label for="drFrom">From page</label><input class="in" id="drFrom" type="number" min="1" max="' + N + '" value="' + d1 + '" placeholder="e.g. 10" inputmode="numeric"></div>' +
+        '<div class="field"><label for="drTo">To page</label><input class="in" id="drTo" type="number" min="1" max="' + N + '" value="' + d2 + '" placeholder="e.g. 33" inputmode="numeric"></div>' +
+      '</div>' +
+      '<p class="note" id="drMsg"></p>' +
+      '<div class="dr-strip" id="drStrip" hidden></div>' +
+      '<p class="note">Page numbers are the ones shown in the grid right now.</p>' +
+    '</div>' +
+    '<div class="df"><button class="btn" type="button" data-close>Cancel</button>' +
+    '<button class="btn danger-solid" type="button" id="drOk" disabled>' + icon('trash') + 'Delete</button></div>', true);
+
+  var fromIn = $('#drFrom'), toIn = $('#drTo'), msg = $('#drMsg'), ok = $('#drOk'), strip = $('#drStrip'), range = null;
+  function num(el){ var v = el.value.trim(); return /^\d+$/.test(v) ? +v : (v ? NaN : null); }
+  function fig(n){ return '<figure class="dr-th" data-n="' + n + '"><div class="sheet"><img alt=""></div><figcaption>Page ' + n + '</figcaption></figure>'; }
+  function off(text, el){
+    range = null; ok.disabled = true; ok.innerHTML = icon('trash') + 'Delete'; strip.hidden = true;
+    msg.className = el ? 'note err' : 'note'; msg.textContent = text;
+    if (el) el.classList.add('bad');
+  }
+  function sync(){
+    fromIn.classList.remove('bad'); toIn.classList.remove('bad');
+    var a = num(fromIn), b = num(toIn);
+    if (a === null || b === null) return off('Enter the first and the last page you want to delete.');
+    if (isNaN(a) || a < 1 || a > N) return off('Starting page must be from 1 to ' + N + '.', fromIn);
+    if (isNaN(b) || b < 1 || b > N) return off('Ending page must be from 1 to ' + N + '.', toIn);
+    if (a > b) return off('Ending page must be the same as or after the starting page.', toIn);
+    var k = b - a + 1; range = [a, b];
+    if (k === N) { msg.className = 'note warn'; msg.textContent = 'This deletes every page in the document.'; }
+    else { msg.className = 'note'; msg.textContent = (a === b ? 'Page ' + a : 'Pages ' + a + ' to ' + b) + ' (' + plural(k, 'page') + ') will be deleted. ' + plural(N - k, 'page') + ' will remain.'; }
+    ok.disabled = false; ok.innerHTML = icon('trash') + 'Delete ' + plural(k, 'page');
+    strip.hidden = false;
+    strip.innerHTML = fig(a) + '<span class="dr-mid">' + (k > 2 ? '+ ' + plural(k - 2, 'page') + ' in between' : '') + '</span>' + (k > 1 ? fig(b) : '');
+    strip.querySelectorAll('[data-n]').forEach(function(f){
+      var p = S.pages[+f.dataset.n - 1];
+      getThumb(p).then(function(u){ var im = f.querySelector('img'); if (im && f.isConnected) im.src = u; }, function(){});
+    });
+  }
+  [fromIn, toIn].forEach(function(el){
+    el.addEventListener('input', sync);
+    el.addEventListener('keydown', function(e){
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      if (el === fromIn && !toIn.value.trim()) toIn.focus(); else if (range) ok.click();
+    });
+  });
+  ok.onclick = function(){
+    if (!range) return;
+    var a = range[0], b = range[1];
+    var uids = S.pages.slice(a - 1, b).map(function(p){ return p.uid; });
+    dlg.close();
+    removePages(uids, 'Deleted ' + (a === b ? 'page ' + a : 'pages ' + a + '\u2013' + b) + ' (' + plural(uids.length, 'page') + ').');
+  };
+  sync();
+  setTimeout(function(){ fromIn.focus(); fromIn.select(); }, 0);
+}
+
 function openReorder(){
   var k = S.sel.size, def = { mode:'before', num:1 }, N = S.pages.length;
   openDialog(
@@ -1907,6 +1985,7 @@ var commands = {
     insertPagesAt(add, S.pages.length, 'page', 'Added ' + plural(add.length, 'page') + ' from ' + plural(srcs.length, 'file') + '.'); },
   insert: function(){ openInsert({}); },
   'delete': function(){ deletePages(selectedPages().map(function(p){ return p.uid; })); },
+  delrange: openDeleteRange,
   reorder: openReorder,
   extract: function(){ exportPages(selectedPages(), '-pages'); },
   merge: openMerge,
